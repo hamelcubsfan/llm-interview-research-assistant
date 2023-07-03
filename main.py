@@ -243,8 +243,8 @@ chain = load_summarize_chain(llm,
                              combine_prompt=combine_prompt_template,
                              # verbose=True
                              )
-    
-    st.write("Sending to LLM...")
+
+st.write("Sending to LLM...")
 
     # Here we will pass our user information we gathered, the persons name and the response type from the radio button
     output = chain({"input_documents": user_information_docs, # The seven docs that were created before
