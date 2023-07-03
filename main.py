@@ -31,7 +31,7 @@ TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET', 'YourAPIKeyIfNotSet')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YouAPIKeyIfNotSet')
+OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Load up your LLM
 def load_LLM(openai_api_key):
