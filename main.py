@@ -19,10 +19,6 @@ from markdownify import markdownify as md
 # YouTube
 from langchain.document_loaders import YoutubeLoader
 
-# Additional
-import textwrap
-from langchain.token_splitter import RecursiveTokenSplitter
-
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
 TWITTER_API_SECRET = st.secrets["general"]["TWITTER_API_SECRET"]
@@ -232,9 +228,6 @@ if button_ind:
     # Calls the function above
     llm = load_LLM(openai_api_key=OPENAI_API_KEY)
 
-    # Initiate token splitter
-    token_splitter = RecursiveTokenSplitter(chunk_size=2048, chunk_overlap=0)
-
     chain = load_summarize_chain(llm,
                                  chain_type="map_reduce",
                                  map_prompt=map_prompt_template,
@@ -244,22 +237,11 @@ if button_ind:
     
     st.write("Sending to LLM...")
 
-    # Wrap large text into chunks
-    chunks = token_splitter.create_documents([output])
-    
-    # Iterate through each chunk and generate output
-    outputs = []
-    for chunk in chunks:
-        output_chunk = chain({
-            "input_documents": user_information_docs,
-            "persons_name": person_name,
-            "response_type" : response_types[output_type],
-            "text": chunk['text'] # Use the chunk here
-        })
-        outputs.append(output_chunk['output_text'])
-    
-    # Combine all outputs into one string
-    combined_output = "\n".join(outputs)
+    # Here we will pass our user information we gathered, the persons name and the response type from the radio button
+    output = chain({"input_documents": user_information_docs, # The seven docs that were created before
+                    "persons_name": person_name,
+                    "response_type" : response_types[output_type]
+                    })
 
     st.markdown(f"#### Output:")
-    st.write(combined_output)
+    st.write(output['output_text'])
