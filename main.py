@@ -4,7 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
-from langchain.token_splitter import RecursiveTokenSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # Streamlit
 import streamlit as st
