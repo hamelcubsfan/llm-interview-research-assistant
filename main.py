@@ -1,11 +1,10 @@
 # LLMs
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.text_splitter import RecursiveTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
 from transformers import GPT2TokenizerFast
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 # Streamlit
@@ -111,10 +110,10 @@ def get_video_transcripts(url):
 # Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
-    text_splitter = RecursiveTextSplitter(chunk_size=20000, chunk_overlap=2000)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=2000)
 
     # Then we split our user information into different documents
-    docs = text_splitter.split(user_information)
+    docs = text_splitter.create_documents([user_information])
 
     return docs
 
