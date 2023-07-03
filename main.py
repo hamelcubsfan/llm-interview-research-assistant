@@ -21,10 +21,6 @@ from markdownify import markdownify as md
 # YouTube
 from langchain.document_loaders import YoutubeLoader
 
-# Additional
-import textwrap
-from langchain.token_splitter import RecursiveTokenSplitter
-
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
 TWITTER_API_SECRET = st.secrets["general"]["TWITTER_API_SECRET"]
