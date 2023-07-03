@@ -4,6 +4,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
+from langchain.text_splitter import TiktokenTextSplitter
+
 
 # Streamlit
 import streamlit as st
@@ -18,6 +20,10 @@ from markdownify import markdownify as md
 
 # YouTube
 from langchain.document_loaders import YoutubeLoader
+
+# Additional
+import textwrap
+from langchain.token_splitter import RecursiveTokenSplitter
 
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
@@ -107,7 +113,7 @@ def get_video_transcripts(url):
 # Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=2000)
+    text_splitter = TiktokenTextSplitter(chunk_size=2000, chunk_overlap=200)
 
     # Then we split our user information into different documents
     docs = text_splitter.create_documents([user_information])
