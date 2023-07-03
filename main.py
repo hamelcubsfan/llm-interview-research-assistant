@@ -18,19 +18,17 @@ from markdownify import markdownify as md
 
 # YouTube
 from langchain.document_loaders import YoutubeLoader
-# !pip install youtube-transcript-api
 
-# Get your API keys set
-TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
-TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
-TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN', 'YourAPIKeyIfNotSet')
-TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET', 'YourAPIKeyIfNotSet')
+# Get your API keys from Streamlit secrets
+TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
+TWITTER_API_SECRET = st.secrets["general"]["TWITTER_API_SECRET"]
+TWITTER_ACCESS_TOKEN = st.secrets["general"]["TWITTER_ACCESS_TOKEN"]
+TWITTER_ACCESS_TOKEN_SECRET = st.secrets["general"]["TWITTER_ACCESS_TOKEN_SECRET"]
 OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Load up your LLM
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
-    # Make sure your openai_api_key is set as an environment variable
     llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=2000, model_name='gpt-4')
     return llm
 
