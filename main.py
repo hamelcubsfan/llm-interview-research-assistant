@@ -1,11 +1,9 @@
 # LLMs
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
-from transformers import GPT2TokenizerFast
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
 
 # Streamlit
 import streamlit as st
@@ -20,6 +18,10 @@ from markdownify import markdownify as md
 
 # YouTube
 from langchain.document_loaders import YoutubeLoader
+
+# Additional
+import textwrap
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
