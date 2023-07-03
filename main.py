@@ -29,7 +29,7 @@ OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 # Load up your LLM
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
-    llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=2000, model_name='gpt-4')
+    llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=2000, model_name='gpt-text-davinci-003')
     return llm
 
 # A function that will be called only if the environment's openai_api_key isn't set
