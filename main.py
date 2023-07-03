@@ -1,7 +1,7 @@
 # LLMs
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitter import RecursiveTokenTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
 from transformers import GPT2TokenizerFast
