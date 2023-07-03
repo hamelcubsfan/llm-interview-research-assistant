@@ -58,6 +58,7 @@ rich==13.4.2
 six==1.16.0
 smmap==5.0.0
 soupsieve==2.4.1
+spacy==3.5
 SQLAlchemy==2.0.16
 streamlit==1.23.1
 tenacity==8.2.2
