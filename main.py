@@ -227,7 +227,7 @@ if button_ind:
 
     user_information = "\n".join([user_tweets, video_text, website_data])
 
-   user_information_docs = split_text(user_information)
+    user_information_docs = split_text(user_information)
 
     # Calls the function above
     llm = load_LLM(openai_api_key=OPENAI_API_KEY)
