@@ -19,6 +19,9 @@ from markdownify import markdownify as md
 # YouTube
 from langchain.document_loaders import YoutubeLoader
 
+# Tiktoken
+from tiktoken import Tokenizer
+
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
 TWITTER_API_SECRET = st.secrets["general"]["TWITTER_API_SECRET"]
@@ -26,11 +29,50 @@ TWITTER_ACCESS_TOKEN = st.secrets["general"]["TWITTER_ACCESS_TOKEN"]
 TWITTER_ACCESS_TOKEN_SECRET = st.secrets["general"]["TWITTER_ACCESS_TOKEN_SECRET"]
 OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 
+# Your function to split text into chunks of a specific token size
+def split_text_into_token_chunks(text, chunk_size):
+    tokenizer = Tokenizer()
+    tokens = list(tokenizer.tokenize(text))
+
+    chunks = []
+    current_chunk = []
+    current_token_count = 0
+
+    for token in tokens:
+        if current_token_count + len(token) > chunk_size:
+            chunks.append("".join(current_chunk))
+            current_chunk = [token]
+            current_token_count = len(token)
+        else:
+            current_chunk.append(token)
+            current_token_count += len(token)
+
+    if current_chunk:  # Don't forget the last chunk!
+        chunks.append("".join(current_chunk))
+
+    return chunks
+
 # Load up your LLM
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
     llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=2000, model_name='gpt-3.5-turbo')
     return llm
+
+# A function that will be called only if the environment's openai_api_key isn't set
+# ... rest of your code ...
+
+# In the "if button_ind" part, replace "split_text(user_information)" with "split_text_into_token_chunks(user_information, 4096)"
+if button_ind:
+    # ... rest of your code ...
+
+    user_information = "\n".join([user_tweets, video_text, website_data])
+
+    user_information_chunks = split_text_into_token_chunks(user_information, 4096)
+
+    # Convert the chunks into documents
+    user_information_docs = [{"doc": chunk, "metadata": {}} for chunk in user_information_chunks]
+
+    # ... rest of your code ...
 
 # A function that will be called only if the environment's openai_api_key isn't set
 def get_openai_api_key():
