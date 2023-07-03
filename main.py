@@ -78,29 +78,178 @@ def get_original_tweets(screen_name, tweets_to_pull=80, tweets_to_return=80):
     full_text = [x['full_text'] for x in sorted_tweets][:tweets_to_return]
     
     # Convert the list of tweets into a string of tweets we can use in the prompt later
-    users_tweets = "\n\n---\n\n".join(full_text)
-    
+    users_tweets = "\n\n".join(full_text)
+            
     return users_tweets
 
-# Ask the user for a Twitter handle
-st.title('Twitter Persona Creation')
-screen_name = st.text_input('Enter a Twitter handle: @', '')
+# Here we'll pull data from a website and return it's text
+def pull_from_website(url):
+    st.write("Getting webpages...")
+    # Doing a try in case it doesn't work
+    try:
+        response = requests.get(url)
+    except:
+        # In case it doesn't work
+        print ("Whoops, error")
+        return
+    
+    # Put your response in a beautiful soup
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # Get your text
+    text = soup.get_text()
 
-# If it's set, let's go!
-if screen_name:
-    # Get the Tweets
-    users_tweets = get_original_tweets(screen_name, tweets_to_pull=80, tweets_to_return=50)
-    
-    # Format the prompt
-    prompt = PromptTemplate(persona_formation).render(user_input=users_tweets)
-    
-    # Make sure the LLM is loaded
+    # Convert your html to markdown. This reduces tokens and noise
+    text = md(text)
+     
+    return text
+
+# Pulling data from YouTube in text form
+def get_video_transcripts(url):
+    st.write("Getting YouTube Videos...")
+    loader = YoutubeLoader.from_youtube_url(url, add_video_info=True)
+    documents = loader.load()
+    transcript = ' '.join([doc.page_content for doc in documents])
+    return transcript
+
+# Function to change our long text about a person into documents
+def split_text(user_information):
+    # First we make our text splitter
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=2000)
+
+    # Then we split our user information into different documents
+    docs = text_splitter.create_documents([user_information])
+
+    return docs
+
+# Prompts - We'll do a dynamic prompt based on the option the users selects
+# We'll hold different instructions in this dictionary below
+response_types = {
+    'Email' : """
+        "Your task is to compose an email to the candidate about a role we're currently recruiting for. The focus of your message should primarily be on them, their background, and achievements, rather than on us and our organization. The email should be exploratory in nature, seeking to understand more about their impressive background, and discuss potential opportunities within our organization that could benefit from their remarkable skills. Please remember to tailor your email based on the information discovered about the candidate."
+    """,
+    'Point to Mention' : """
+        Your assignment is to develop a list of key points to mention in our initial outreach to the candidate we've researched. This should include highlights from their background, achievements, and unique skills. These bullet points will serve as a framework for our personalized message, helping us to articulate potential ways their capabilities could be harnessed within our organization. Please remember to align your points with the information gathered about the candidate
+    """
+}
+
+map_prompt = """You are a helpful AI bot that aids a user in research.
+Below is information about a person named {persons_name}.
+Information will include tweets, interview transcripts, and blog posts about {persons_name}
+Use specifics from the research when possible
+
+{response_type}
+
+% START OF INFORMATION ABOUT {persons_name}:
+{text}
+% END OF INFORMATION ABOUT {persons_name}:
+
+YOUR RESPONSE:"""
+map_prompt_template = PromptTemplate(template=map_prompt, input_variables=["text", "persons_name", "response_type"])
+
+combine_prompt = """
+You are a helpful AI bot that aids a user in research.
+You will be given information about {persons_name}.
+Do not make anything up, only use information which is in the person's context
+
+{response_type}
+
+% PERSON CONTEXT
+{text}
+
+% YOUR RESPONSE:
+"""
+combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text", "persons_name", "response_type"])
+
+# Start Of Streamlit page
+st.set_page_config(page_title="LLM Assisted Researcher", page_icon=":robot:")
+
+# Start Top Information
+st.header("LLM Assisted Researcher")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.markdown("Want to know more about a candidate?  Want to write an email to fit their exp. and background?.\
+                \n\nThis tool is powered by [BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#) [markdownify](https://pypi.org/project/markdownify/) [Tweepy](https://docs.tweepy.org/en/stable/api.html), [LangChain](https://langchain.com/) and [OpenAI](https://openai.com) and made by \
+                [@GregKamradt](https://twitter.com/GregKamradt). \n\n View Source Code on [Github](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
+
+with col2:
+    st.image(image='Researcher.png', width=300, caption='Mid Journey: A researcher who is really good at their job and utilizes twitter to do research about the person they are interviewing. playful, pastels. --ar 4:7')
+# End Top Information
+
+st.markdown("## :older_man: Larry The LLM Researcher")
+
+# Output type selection by the user
+output_type = st.radio(
+    "Output Type:",
+    ('Email', 'Point to Mention'))
+
+# Collect information about the person you want to research
+person_name = st.text_input(label="Person's Name",  placeholder="Ex: Elad Gil", key="persons_name")
+twitter_handle = st.text_input(label="Twitter Username",  placeholder="@eladgil", key="twitter_user_input")
+youtube_videos = st.text_input(label="YouTube URLs (Use , to seperate videos)",  placeholder="Ex: https://www.youtube.com/watch?v=c_hO_fjmMnk, https://www.youtube.com/watch?v=c_hO_fjmMnk", key="youtube_user_input")
+webpages = st.text_input(label="Web Page URLs (Use , to seperate urls. Must include https://)",  placeholder="https://eladgil.com/", key="webpage_user_input")
+
+# Check to see if there is an @ symbol or not on the user name
+if twitter_handle and twitter_handle[0] == "@":
+    twitter_handle = twitter_handle[1:]
+
+# Output
+st.markdown(f"### {output_type}:")
+
+# Get URLs from a string
+def parse_urls(urls_string):
+    """Split the string by comma and strip leading/trailing whitespaces from each URL."""
+    return [url.strip() for url in urls_string.split(',')]
+
+# Get information from those URLs
+def get_content_from_urls(urls, content_extractor):
+    """Get contents from multiple urls using the provided content extractor function."""
+    return "\n".join(content_extractor(url) for url in urls)
+
+button_ind = st.button("*Generate Output*", type='secondary', help="Click to generate output based on information")
+
+# Checking to see if the button_ind is true. If so, this means the button was clicked and we should process the links
+if button_ind:
+    if not (twitter_handle or youtube_videos or webpages):
+        st.warning('Please provide links to parse', icon="⚠️")
+        st.stop()
+
+    if not OPENAI_API_KEY:
+        st.warning('Please insert OpenAI API Key. Instructions [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key)', icon="⚠️")
+        st.stop()
+
     if OPENAI_API_KEY == 'YourAPIKeyIfNotSet':
+        # If the openai key isn't set in the env, put a text box out there
         OPENAI_API_KEY = get_openai_api_key()
+
+    # Go get your data
+    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
+    video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
+    website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
+
+    user_information = "\n".join([user_tweets, video_text, website_data])
+
+    user_information_docs = split_text(user_information)
+
+    # Calls the function above
     llm = load_LLM(openai_api_key=OPENAI_API_KEY)
+
+    chain = load_summarize_chain(llm,
+                                 chain_type="map_reduce",
+                                 map_prompt=map_prompt_template,
+                                 combine_prompt=combine_prompt_template,
+                                 # verbose=True
+                                 )
     
-    # Get the model's response
-    model_response = llm.respond(prompt=prompt)
-    
-    # Output the model's response
-    st.write(model_response)
+    st.write("Sending to LLM...")
+
+    # Here we will pass our user information we gathered, the persons name and the response type from the radio button
+    output = chain({"input_documents": user_information_docs, # The seven docs that were created before
+                    "persons_name": person_name,
+                    "response_type" : response_types[output_type]
+                    })
+
+    st.markdown(f"#### Output:")
+    st.write(output['output_text'])
