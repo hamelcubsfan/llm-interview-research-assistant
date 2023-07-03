@@ -4,7 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
 from langchain.prompts import PromptTemplate
-from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import SpacyTextSplitter
 
 
 # Streamlit
@@ -113,7 +113,7 @@ def get_video_transcripts(url):
 # Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
-    text_splitter = CharacterTextSplitter.from_tiktoken_encoder(chunk_size=20000, chunk_overlap=2000)
+    text_splitter = SpacyTextSplitter(chunk_size=20000)
 
     # Then we split our user information into different documents
     docs = text_splitter.split_text(user_information)
