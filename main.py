@@ -31,7 +31,7 @@ TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET', 'YourAPIKeyIfNotSet')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YourAPIKeyIfNotSet')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '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')
 
 # Load up your LLM
 def load_LLM(openai_api_key):
@@ -125,13 +125,11 @@ def split_text(user_information):
 # Prompts - We'll do a dynamic prompt based on the option the users selects
 # We'll hold different instructions in this dictionary below
 response_types = {
-    'Interview Questions' : """
-        Your goal is to generate interview questions that we can ask them
-        Please respond with list of a few interview questions based on the topics above
+    'Email' : """
+        "Your task is to compose an email to the candidate about a role we're currently recruiting for. The focus of your message should primarily be on them, their background, and achievements, rather than on us and our organization. The email should be exploratory in nature, seeking to understand more about their impressive background, and discuss potential opportunities within our organization that could benefit from their remarkable skills. Please remember to tailor your email based on the information discovered about the candidate."
     """,
-    '1-Page Summary' : """
-        Your goal is to generate a 1 page summary about them
-        Please respond with a few short paragraphs that would prepare someone to talk to this person
+    'Point to mention' : """
+        Your assignment is to develop a list of key points to mention in our initial outreach to the candidate we've researched. This should include highlights from their background, achievements, and unique skills. These bullet points will serve as a framework for our personalized message, helping us to articulate potential ways their capabilities could be harnessed within our organization. Please remember to align your points with the information gathered about the candidate
     """
 }
 
