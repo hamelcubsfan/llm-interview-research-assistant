@@ -247,10 +247,11 @@ chain = load_summarize_chain(llm,
 st.write("Sending to LLM...")
 
 # Here we will pass our user information we gathered, the persons name and the response type from the radio button
+print(user_information_docs)
 output = chain({"input_documents": user_information_docs, # The seven docs that were created before
-                    "persons_name": person_name,
-                    "response_type" : response_types[output_type]
-                    })
+                "persons_name": person_name,
+                "response_type" : response_types[output_type]
+                })
 
 st.markdown(f"#### Output:")
 st.write(output['output_text'])
