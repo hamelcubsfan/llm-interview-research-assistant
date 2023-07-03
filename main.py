@@ -20,7 +20,7 @@ from markdownify import markdownify as md
 from langchain.document_loaders import YoutubeLoader
 
 # Tiktoken
-from tiktoken import Tokenizer
+from tiktoken.Tokenizer import Tokenizer
 
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
