@@ -31,7 +31,7 @@ TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET', 'YourAPIKeyIfNotSet')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', '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')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YouAPIKeyIfNotSet')
 
 # Load up your LLM
 def load_LLM(openai_api_key):
@@ -128,7 +128,7 @@ response_types = {
     'Email' : """
         "Your task is to compose an email to the candidate about a role we're currently recruiting for. The focus of your message should primarily be on them, their background, and achievements, rather than on us and our organization. The email should be exploratory in nature, seeking to understand more about their impressive background, and discuss potential opportunities within our organization that could benefit from their remarkable skills. Please remember to tailor your email based on the information discovered about the candidate."
     """,
-    'Point to mention' : """
+    'Point to Mention' : """
         Your assignment is to develop a list of key points to mention in our initial outreach to the candidate we've researched. This should include highlights from their background, achievements, and unique skills. These bullet points will serve as a framework for our personalized message, helping us to articulate potential ways their capabilities could be harnessed within our organization. Please remember to align your points with the information gathered about the candidate
     """
 }
@@ -162,16 +162,15 @@ Do not make anything up, only use information which is in the person's context
 combine_prompt_template = PromptTemplate(template=combine_prompt, input_variables=["text", "persons_name", "response_type"])
 
 # Start Of Streamlit page
-st.set_page_config(page_title="LLM Assisted Interview Prep", page_icon=":robot:")
+st.set_page_config(page_title="LLM Assisted Researcher", page_icon=":robot:")
 
 # Start Top Information
-st.header("LLM Assisted Interview Prep")
+st.header("LLM Assisted Researcher")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown("Have an interview coming up? I bet they are on Twitter or YouTube or the web. This tool is meant to help you generate \
-                interview questions based off of topics they've recently tweeted or talked about.\
+    st.markdown("Want to know more about a candidate?  Want to write an email to fit their exp. and background?.\
                 \n\nThis tool is powered by [BeautifulSoup](https://beautiful-soup-4.readthedocs.io/en/latest/#) [markdownify](https://pypi.org/project/markdownify/) [Tweepy](https://docs.tweepy.org/en/stable/api.html), [LangChain](https://langchain.com/) and [OpenAI](https://openai.com) and made by \
                 [@GregKamradt](https://twitter.com/GregKamradt). \n\n View Source Code on [Github](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
 
@@ -184,7 +183,7 @@ st.markdown("## :older_man: Larry The LLM Researcher")
 # Output type selection by the user
 output_type = st.radio(
     "Output Type:",
-    ('Interview Questions', '1-Page Summary'))
+    ('Email', 'Point to Mention'))
 
 # Collect information about the person you want to research
 person_name = st.text_input(label="Person's Name",  placeholder="Ex: Elad Gil", key="persons_name")
