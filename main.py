@@ -71,8 +71,9 @@ def get_original_tweets(screen_name, tweets_to_pull=80, tweets_to_return=80):
     full_text = [x['full_text'] for x in sorted_tweets][:tweets_to_return]
     
     # Convert the list of tweets into a string of tweets we can use in the prompt later
-        users_raw_emotions = " ".join(full_text)
-    return users_raw_emotions
+    users_tweets = "\n\n".join(full_text)
+            
+    return users_tweets
 
 # Function for getting YouTube comments
 def get_youtube_comments(video_id, comments_to_pull=20):
