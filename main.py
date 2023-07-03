@@ -21,7 +21,7 @@ from langchain.document_loaders import YoutubeLoader
 
 # Additional
 import textwrap
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.token_splitter import RecursiveTokenSplitter
 
 # Get your API keys from Streamlit secrets
 TWITTER_API_KEY = st.secrets["general"]["TWITTER_API_KEY"]
@@ -108,7 +108,6 @@ def get_video_transcripts(url):
     transcript = ' '.join([doc.page_content for doc in documents])
     return transcript
 
-# Function to change our long text about a person into documents
 # Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
@@ -221,40 +220,32 @@ if button_ind:
         # If the openai key isn't set in the env, put a text box out there
         OPENAI_API_KEY = get_openai_api_key()
 
-# Go get your data
-user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
-video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
-website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
+    # Go get your data
+    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
+    video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
+    website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
 
-user_information = "\n".join([user_tweets, video_text, website_data])
+    user_information = "\n".join([user_tweets, video_text, website_data])
 
-# Print user_information
-print(f"user_information: {user_information}")
+    user_information_docs = split_text(user_information)
 
-user_information_docs = split_text(user_information)
+    # Calls the function above
+    llm = load_LLM(openai_api_key=OPENAI_API_KEY)
 
-# Print user_information_docs
-print(f"user_information_docs: {user_information_docs}")
+    chain = load_summarize_chain(llm,
+                                 chain_type="map_reduce",
+                                 map_prompt=map_prompt_template,
+                                 combine_prompt=combine_prompt_template,
+                                 # verbose=True
+                                 )
+    
+    st.write("Sending to LLM...")
 
-# Calls the function above
-llm = load_LLM(openai_api_key=OPENAI_API_KEY)
+    # Here we will pass our user information we gathered, the persons name and the response type from the radio button
+    output = chain({"input_documents": user_information_docs, # The seven docs that were created before
+                    "persons_name": person_name,
+                    "response_type" : response_types[output_type]
+                    })
 
-chain = load_summarize_chain(llm,
-                             chain_type="map_reduce",
-                             map_prompt=map_prompt_template,
-                             combine_prompt=combine_prompt_template,
-                             # verbose=True
-                             )
-
-st.write("Sending to LLM...")
-
-# Print user_information_docs again right before calling chain()
-print(f"user_information_docs before calling chain: {user_information_docs}")
-
-output = chain({"input_documents": user_information_docs, # The seven docs that were created before
-                "persons_name": person_name,
-                "response_type" : response_types[output_type]
-                })
-
-st.markdown(f"#### Output:")
-st.write(output['output_text'])
+    st.markdown(f"#### Output:")
+    st.write(output['output_text'])
