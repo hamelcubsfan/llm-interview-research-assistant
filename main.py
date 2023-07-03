@@ -31,7 +31,20 @@ TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN', 'YourAPIKeyIfNotSet')
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET', 'YourAPIKeyIfNotSet')
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YouAPIKeyIfNotSet')
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY', 'YourAPIKeyIfNotSet')
+
+# Function to retrieve OpenAI API key from user input in Streamlit interface
+def get_openai_api_key():
+    return st.text_input(label="OpenAI API Key",  placeholder="Ex: sk-2twmA8tfCb8un4...", key="openai_api_key_input")
+
+# Start of Streamlit page
+st.set_page_config(page_title="LLM Assisted Researcher", page_icon=":robot:")
+
+# Top Information
+st.header("LLM Assisted Researcher")
+
+# Get OpenAI API Key from user input
+OPENAI_API_KEY = get_openai_api_key()
 
 # Load up your LLM
 def load_LLM(openai_api_key):
