@@ -20,12 +20,6 @@ from markdownify import markdownify as md
 from langchain.document_loaders import YoutubeLoader
 # !pip install youtube-transcript-api
 
-# Environment Variables
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 # Get your API keys set
 TWITTER_API_KEY = os.getenv('TWITTER_API_KEY', 'YourAPIKeyIfNotSet')
 TWITTER_API_SECRET = os.getenv('TWITTER_API_SECRET', 'YourAPIKeyIfNotSet')
