@@ -110,14 +110,10 @@ def get_video_transcripts(url):
 # Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
-    text_splitter = RecursiveTokenTextSplitter(chunk_size=20000, chunk_overlap=2000)
+    text_splitter = RecursiveTextSplitter(chunk_size=20000, chunk_overlap=2000)
 
     # Then we split our user information into different documents
-    docs = text_splitter.create_documents([user_information])
-
-    # If docs is empty, return a list with an empty string
-    if not docs:
-        return [""]
+    docs = text_splitter.split(user_information)
 
     return docs
 
