@@ -219,24 +219,30 @@ if button_ind:
         # If the openai key isn't set in the env, put a text box out there
         OPENAI_API_KEY = get_openai_api_key()
 
-    # Go get your data
-    user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
-    video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
-    website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
+# Go get your data
+user_tweets = get_original_tweets(twitter_handle) if twitter_handle else ""
+video_text = get_content_from_urls(parse_urls(youtube_videos), get_video_transcripts) if youtube_videos else ""
+website_data = get_content_from_urls(parse_urls(webpages), pull_from_website) if webpages else ""
 
-    user_information = "\n".join([user_tweets, video_text, website_data])
+user_information = "\n".join([user_tweets, video_text, website_data])
 
-    user_information_docs = split_text(user_information)
+# Print user_information
+print(f"user_information: {user_information}")
 
-    # Calls the function above
-    llm = load_LLM(openai_api_key=OPENAI_API_KEY)
+user_information_docs = split_text(user_information)
 
-    chain = load_summarize_chain(llm,
-                                 chain_type="map_reduce",
-                                 map_prompt=map_prompt_template,
-                                 combine_prompt=combine_prompt_template,
-                                 # verbose=True
-                                 )
+# Print user_information_docs
+print(f"user_information_docs: {user_information_docs}")
+
+# Calls the function above
+llm = load_LLM(openai_api_key=OPENAI_API_KEY)
+
+chain = load_summarize_chain(llm,
+                             chain_type="map_reduce",
+                             map_prompt=map_prompt_template,
+                             combine_prompt=combine_prompt_template,
+                             # verbose=True
+                             )
     
     st.write("Sending to LLM...")
 
