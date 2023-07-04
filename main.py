@@ -1,4 +1,6 @@
-# LLMs# LLMs
+Okay. Here is my code. Can you address the above with it?
+
+# LLMs
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -26,16 +28,10 @@ TWITTER_ACCESS_TOKEN = st.secrets["general"]["TWITTER_ACCESS_TOKEN"]
 TWITTER_ACCESS_TOKEN_SECRET = st.secrets["general"]["TWITTER_ACCESS_TOKEN_SECRET"]
 OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 
-from langchain.llms import OpenAIChat
-
+# Load up your LLM
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
-    llm = OpenAIChat(
-        model_name='gpt-3.5-turbo-16k',
-        temperature=.7,
-        openai_api_key=openai_api_key,         
-        max_tokens=2000
-    )
+    llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=2000, model_name='gpt-3.5-turbo')
     return llm
 
 # A function that will be called only if the environment's openai_api_key isn't set
@@ -110,10 +106,10 @@ def get_video_transcripts(url):
     transcript = ' '.join([doc.page_content for doc in documents])
     return transcript
 
-# Function# Function to change our long text about a person into documents
+# Function to change our long text about a person into documents
 def split_text(user_information):
     # First we make our text splitter
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=4096, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=20000, chunk_overlap=2000)
 
     # Then we split our user information into different documents
     docs = text_splitter.create_documents([user_information])
