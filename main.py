@@ -1,5 +1,3 @@
-Okay. Here is my code. Can you address the above with it?
-
 # LLMs
 from langchain import PromptTemplate
 from langchain.chat_models import ChatOpenAI
