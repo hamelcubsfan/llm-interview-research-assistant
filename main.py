@@ -29,7 +29,7 @@ OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 # Load up your LLM
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
-    llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=3000, model_name='gpt-3.5-turbo-16k')
+    llm = ChatOpenAI(temperature=.7, openai_api_key=openai_api_key, max_tokens=3500, model_name='gpt-3.5-turbo-16k')
     return llm
 
 # A function that will be called only if the environment's openai_api_key isn't set
@@ -121,7 +121,7 @@ response_types = {
         "Your task is to compose an email to the candidate about a role we're currently recruiting for. The focus of your message should primarily be on them, their background, and achievements, rather than on us and our organization. The email should be exploratory in nature, seeking to understand more about their impressive background, and discuss potential opportunities within our organization that could benefit from their remarkable skills. Please remember to tailor your email based on the information discovered about the candidate."
     """,
     'Point to Mention' : """
-        Your assignment is to develop a list of bullet points to mention in our initial outreach to the candidate we've researched. This should include highlights from their background, achievements, and unique skills. These bullet points will serve as ideas our personalized message, helping us to articulate potential ways their capabilities could be harnessed within our organization. Please remember to align your points with the information gathered about the candidate and be concise 
+        Your assignment is to develop a list of bullet points to mention in our initial outreach to the candidate we've researched. This should include highlights from their background, achievements, and unique skills. These bullet points will serve as ideas our personalized message, helping us to articulate potential ways their capabilities could be harnessed within our organization. Please remember to align your points with the information gathered about the candidate and be somewhat concise 
     """
 }
 
