@@ -26,7 +26,8 @@ TWITTER_ACCESS_TOKEN = st.secrets["general"]["TWITTER_ACCESS_TOKEN"]
 TWITTER_ACCESS_TOKEN_SECRET = st.secrets["general"]["TWITTER_ACCESS_TOKEN_SECRET"]
 OPENAI_API_KEY = st.secrets["general"]["OPENAI_API_KEY"]
 
-# Load# Load up your LLM
+from langchain.llms import OpenAIChat
+
 def load_LLM(openai_api_key):
     """Logic for loading the chain you want to use should go here."""
     llm = OpenAIChat(
