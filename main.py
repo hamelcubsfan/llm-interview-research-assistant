@@ -166,7 +166,7 @@ with col1:
                 [@GregKamradt](https://twitter.com/GregKamradt). \n\n View Source Code on [Github](https://github.com/gkamradt/globalize-text-streamlit/blob/main/main.py)")
 
 with col2:
-    st.image(image='Researcher.png', width=300, caption='Mid Journey: A researcher who is really good at their job and utilizes twitter to do research about the person they are interviewing. playful, pastels. --ar 4:7')
+    st.image(image='Researcher.png', width=300, caption='Your personal researcher')
 # End Top Information
 
 st.markdown("## :older_man: Larry The LLM Researcher")
