@@ -120,7 +120,7 @@ response_types = {
     'Email' : """
         "Your task is to compose an email to the candidate about a role we're currently recruiting for. The focus of your message should primarily be on them, their background, and achievements, rather than on us and our organization. The email should be exploratory in nature, seeking to understand more about their impressive background, and discuss potential opportunities within our organization that could benefit from their remarkable skills. Please remember to tailor your email based on the information discovered about the candidate."
     """,
-    'Point to Mention' : """your task is to act as an expert in sourcing and recruiting, I’m providing you with information on a potential candidate. I need your analysis and help in creating a targeted list of bullet points highlighting key elements about their background, their accomplishments, specific skills, and most importantly, things that would appeal to them or entice them to consider the opportunity we are offering? Also, be somewhat concise 
+    'Point to Mention' : """As a specialist in talent acquisition, your mission is to analyze the data provided on a potential candidate. Your expertise is required to formulate a succinct list of bullet points that encapsulate key aspects of their professional history, notable achievements, and distinct skills. Crucially, identify elements that could spark their interest and potentially persuade them to consider the opportunity we're extending. Please ensure your analysis is concise yet comprehensive.  Also, be somewhat concise. 
     """
 }
 
